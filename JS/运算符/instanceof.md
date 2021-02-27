@@ -20,21 +20,21 @@ person instanceof String // false
 以下是伪代码实现，具体实现可参考[ECMAScript文档](https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf) （12.10.4、7.3.21、7.2.3等章节）
 ```
 const myInstanceof = (leftArg, rightArg) => {
-    if (rightArg不是Object || !rightArg.prototype === false)
-    	return false;
-
-    if (leftArg不是Object，即非引用类型)
-    	return false;
-        
-    let leftArgProto = leftArg.__proto__;
-    while(leftArgProto) {
-    	if (rightArg.prototype === leftArgProto) {
-        	return true;
-        }
-        leftArgProto = leftArgProto.__proto__
-    }
-    
+  if (rightArg不是Object || !rightArg.prototype === false)
     return false;
+
+  if (leftArg不是Object，即非引用类型)
+    return false;
+        
+  let leftArgProto = leftArg.__proto__;
+  while(leftArgProto) {
+    if (rightArg.prototype === leftArgProto) {
+      return true;
+    }
+    leftArgProto = leftArgProto.__proto__
+  }
+    
+  return false;
 };
 ```
 顺便提一下看到网上有很多人解释 instanceof 的原理都只提到了上面提到的第3点，以至于实现的函数会存在 myInstanceof(1, Number) 返回 true 的情况。这是由于 JS “自动装箱”导致的，在浏览器中输入 (1).__proto__ === Number.prototype 会返回 true ，这里的 (1) 已经被 JS 自动装箱成Number对象。但在 instanceof 操作符中 JS 是对左侧参数进行过类型判断并未自动装箱。
